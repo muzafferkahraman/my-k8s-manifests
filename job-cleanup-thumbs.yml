@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: thumbs-cleanup
+  namespace: default
+  annotations:
+    source_url: "git@gitlab.com:kisphp/example.git"
+spec:
+  ttlSecondsAfterFinished: 120 # deleted the finished pod after 2 minutes
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: php
+          image: my-custom-container
+          imagePullPolicy: Always
+          command:
+            - vendor/bin/console
+            - cleanup:thumbs
+          envFrom:
+            - configMapRef:
+                name: my-config
+          env:
+            - name: CONTAINER_PURPOSE
+              value: job
+            - name: MY_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-password
+                  key: password
