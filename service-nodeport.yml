@@ -1,0 +1,48 @@
+---
+# ClusterIP
+apiVersion: v1
+kind: Service
+metadata:
+    name: my-app-cluster-ip
+    namespace: defualt
+    annotations:
+        source_url: "git@gitlab.com:kisphp/example.git"
+spec:
+    type: ClusterIP
+    selector:
+        app: my_app
+    ports:
+        -    port: 80
+             targetPort: 80
+---
+# NodePort
+apiVersion: v1
+kind: Service
+metadata:
+    name: nodeport
+    namespace: default
+    annotations:
+        source_url: "git@gitlab.com:kisphp/example.git"
+spec:
+    type: NodePort
+    selector:
+        app: my_app
+    ports:
+        -    port: 80
+             targetPort: 80
+---
+# LoadBalancer (will not work on minikube)
+apiVersion: v1
+kind: Service
+metadata:
+    name: my-app-load-balancer
+    namespace: default
+    annotations:
+        source_url: "git@gitlab.com:kisphp/example.git"
+spec:
+    type: LoadBalancer
+    selector:
+        app: my-app
+    ports:
+        -    port: 80
+             targetPort: 80
