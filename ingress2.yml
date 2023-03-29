@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: ingress2
+    namespace: default
+    annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: /
+        controller.scope.enabled: "true"
+        controller.scope.namespace: "default"
+        source_url: "git@gitlab.com:kisphp/example.git"
+spec:
+    # (optional) if you want to listen to 443 port
+    tls:
+        -   hosts:
+                -   www.example.com
+                 # secret defined for SSL certificate
+            secretName: example.com-tls
+    rules:
+        -   host: www.example.com
+            http:
+                paths:
+                    -   
+                        path: /
+                        pathType: Prefix
+                        backend:
+                            service:
+                                name: my-app
+                                port:
+                                number: 80
+
