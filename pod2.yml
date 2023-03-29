@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod2
+spec:
+  nodeName: worker1
+  containers:
+    - name: container-pod2
+      image: muzo4
+      imagePullPolicy: IfNotPresent
