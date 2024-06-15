@@ -5,31 +5,40 @@ metadata:
   name: pod2
 spec:
   nodeName: worker1
+  
   volumes:
-    - name: "kuard-data"
-      nfs:
-        server: my.nfs.server.local
-        path: "/exports"
+      - name: "kuard-data"
+        nfs:
+            server: my.nfs.server.local # hostname or IP address of the NFS server
+            path: "/exports" # specifies the folder path on the NFS server
+              
+      - name: "local-data"
+        hostPath:
+          path: "/path/on/worker/node"
+        
   containers:
+  
       - name: container
-        image: muzo4
+      
+        image: gcr.io/kuar-demo/kuard-amd64:blue
+        
         imagePullPolicy: IfNotPresent
         
-        ports:
+        ports: # defines how the container exposes itself to the external network
           - containerPort: 8080
             name: http
             protocol: TCP
         
         resources:
-            requests:
+            requests: # min
                 cpu: "500m"
                 memory: "128Mi"
-            limits:
+            limits: # max
                 cpu: "1000m"
                 memory: "256Mi"
         
         volumeMounts:
-          - mountPath: "/data"
+          - mountPath: "/data"  # destination folder inside the container
             name: "kuard-data"
             
         livenessProbe:
@@ -49,3 +58,4 @@ spec:
             timeoutSeconds: 1
             periodSeconds: 10
             failureThreshold: 3
+                
